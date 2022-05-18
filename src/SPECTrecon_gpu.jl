@@ -12,5 +12,6 @@ module SPECTrecon_gpu
     include("fft_convolve_gpu.jl")
     include("SPECTplan_gpu.jl")
     include("project_gpu.jl")
+    include("backproject_gpu.jl")
 
 end # module

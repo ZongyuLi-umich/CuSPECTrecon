@@ -117,6 +117,22 @@ end
 
 
 """
+    gen_attenuation_gpu!(plan, y)
+Generate depth-dependent attenuation map
+"""
+function gen_attenuation_gpu!(plan::SPECTplan_gpu, y::Int)
+    scale3dj_gpu!(plan.exp_mumapr, plan.mumapr, y, -0.5)
+    for j = 1:y
+        plus3dj_gpu!(plan.exp_mumapr, plan.mumapr, j)
+    end
+
+    broadcast!(*, plan.exp_mumapr, plan.exp_mumapr, - plan.dy)
+    broadcast!(exp, plan.exp_mumapr, plan.exp_mumapr)
+    return plan.exp_mumapr
+end
+
+
+"""
     show(io::IO, ::MIME"text/plain", plan::SPECTplan_gpu)
 """
 function Base.show(io::IO, ::MIME"text/plain", plan::SPECTplan_gpu{T,A2,A3,A4}) where {T,A2,A3,A4}

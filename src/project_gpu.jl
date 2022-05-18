@@ -31,13 +31,7 @@ function project_gpu!(
 
     for y = 1:plan.imgsize[2] # 1:ny
 
-        scale3dj_gpu!(plan.exp_mumapr, plan.mumapr, y, -0.5)
-        for j = 1:y
-            plus3dj_gpu!(plan.exp_mumapr, plan.mumapr, j)
-        end
-
-        broadcast!(*, plan.exp_mumapr, plan.exp_mumapr, - plan.dy)
-        broadcast!(exp, plan.exp_mumapr, plan.exp_mumapr)
+        gen_attenuation_gpu!(plan, y)
         # apply depth-dependent attenuation
         mul3dj_gpu!(plan.imgr, plan.exp_mumapr, y)
 
